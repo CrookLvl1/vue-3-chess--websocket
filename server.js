@@ -1,18 +1,13 @@
-const express = require('express');
 const ws = require('ws');
-const http = require('http')
-
 const webSocketPort = process.env.port || 8000;
 const securityCode = process.env.securityCode || 'qwerty123';
 
-const app = express();
-const server = http.createServer({ origin: 'websocket-api', ...app });
 
 
 
 
-const wss = new ws.WebSocketServer({ server });
-
+const wss = new ws.WebSocketServer({ port: webSocketPort });
+console.log('host', webSocketPort, securityCode);
 
 let nextId = 1;
 let nextRoomId = 1;
@@ -196,6 +191,3 @@ wss.on("connection", (ws, req) => {
     }
 })
 
-server.listen(webSocketPort, () => {
-    console.log(`server started, port = ${webSocketPort}, securityCode = ${securityCode}`);
-})
