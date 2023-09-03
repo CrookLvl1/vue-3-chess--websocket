@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "ws": "^8.13.0"
+  },
+  "engines": {
+    "node": ">=15"
   }
 }
