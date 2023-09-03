@@ -107,11 +107,13 @@ const createGame = (time, roomId) => {
 
 
     whiteWs.on('message', (data, isBinary) => {
+        console.log(`${whiteWs.id}: msg`)
         data = isBinary ? data : data.toString();
         sendInfo(blackWs, data);
 
     })
     blackWs.on('message', (data, isBinary) => {
+        console.log(`${blackWs.id}: msg`)
         data = isBinary ? data : data.toString();
         sendInfo(whiteWs, data);
     })
@@ -130,7 +132,6 @@ const createGame = (time, roomId) => {
 
 //Server
 wss.on("connection", (ws, req) => {
-    console.log(`connected with protocool = ${ws.protocol}`);
     if (getPropFromUrl(req.url, 'authKey=') !== securityCode) {
         console.log('Insecure connection');
         ws.close();
@@ -186,7 +187,7 @@ wss.on("connection", (ws, req) => {
         ws.on('close', () => {
             const userIndex = publicRooms[time].findIndex(playerWs => playerWs === ws);
             if (userIndex !== -1) publicRooms[time].splice(userIndex, 1);
-            console.log(`${id} disconnected!`);
+            console.log(`${id} disconnected!`); 
         })
     }
 })
