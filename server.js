@@ -1,14 +1,19 @@
+const express = require('express');
 const ws = require('ws');
+const http = require('http')
 
 const webSocketPort = process.env.port || 8000;
 const securityCode = process.env.securityCode || 'qwerty123';
 
+const app = express();
+const server = http.createServer({ origin: 'websocket-api', ...app });
 
-console.log(`server started, port = ${webSocketPort}, securityCode = ${securityCode}`);
 
-const wss = new ws.WebSocketServer({
-    port: webSocketPort,
-})
+
+
+const wss = new ws.WebSocketServer({ server });
+
+
 let nextId = 1;
 let nextRoomId = 1;
 const games = [];
@@ -159,7 +164,7 @@ wss.on("connection", (ws, req) => {
             ws.on('close', () => {
                 console.log(`${id} disconnected!`)
             });
-            
+
             if (!roomId || !personalRooms[roomId]) {
                 ws.send(JSON.stringify({ type: 'roomnotfound' }));
                 ws.close();
@@ -189,4 +194,8 @@ wss.on("connection", (ws, req) => {
             console.log(`${id} disconnected!`);
         })
     }
+})
+
+server.listen(webSocketPort, () => {
+    console.log(`server started, port = ${webSocketPort}, securityCode = ${securityCode}`);
 })
