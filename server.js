@@ -1,5 +1,10 @@
 const ws = require('ws');
-const {webSocketPort, securityCode} = require('./base');
+
+const webSocketPort = process.env.port || 8000;
+const securityCode = process.env.securityCode || 'qwerty123';
+
+
+console.log(`server started, port = ${webSocketPort}, securityCode = ${securityCode}`);
 
 const wss = new ws.WebSocketServer({
     port: webSocketPort,
@@ -125,6 +130,7 @@ const createGame = (time, roomId) => {
 
 //Server
 wss.on("connection", (ws, req) => {
+    console.log(`connected with protocool = ${ws.protocol}`);
     if (getPropFromUrl(req.url, 'authKey=') !== securityCode) {
         console.log('Insecure connection');
         ws.close();
